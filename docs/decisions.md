@@ -78,3 +78,16 @@ Spike 2 ([spike-2.md](spike-2.md)) confirmed the fixes from ADR 0079 on the tria
 `m-auto`, HZ072 catches shorthand overrides, HZ094 reports the store's `--color-ink` clash, computed `noindex` works,
 and installing a kit syncs every kit's `tv.ts`. Nothing in the decisions above changes. The kit's install mode
 (proposal §3.4) relies on HZ094 for its clash report.
+
+## 2026-10-10: an app's brand type over the kit (the owner: B)
+- **The kit stays system-fonts-only** (decision 6). An app that has its own brand type overrides the kit
+  explicitly: it defines `--font-sans` / `--font-display` in a stylesheet imported after the kit (a feature's
+  `styles`; the project stylesheet is imported before kits) and records each intended override with
+  `project({ accept: [{ code: 'HZ094', at: '--font-display', reason: '…' }] })`. HZ094 plus `accept` is the documented way.
+- In the storefront copy: `features/site/brand.css` holds Inter and Fraunces, two accepted HZ094 entries
+  ("The storefront's brand type overrides the kit's system stack"); `hozu check`: 0 warnings (2 accepted).
+- **`--color-ink` was not a brand override**, so it was fixed instead of accepted: the store's own `#1b2420` was
+  removed and the kit's `ink` role applies everywhere (as it already did, silently, since the kit won).
+- **The dark header had a second cause**: the kit's `:root { color-scheme: light dark }` turned every unmigrated
+  page dark when the OS was dark. The kit now defaults to `light`; `data-mode="dark"` or `"system"` opts in.
+  Dark mode is the app's explicit choice (principle 2).

@@ -88,7 +88,8 @@
   --display-tracking: -0.01em;
 }
 
-:root { color-scheme: light dark; }
+:root { color-scheme: light; }
+[data-mode="system"], :root:has([data-mode="system"]) { color-scheme: light dark; }
 [data-mode="light"], :root:has([data-mode="light"]) { color-scheme: light; }
 [data-mode="dark"], :root:has([data-mode="dark"]) { color-scheme: dark; }
 [data-density="compact"] { --spacing: 0.2rem; }

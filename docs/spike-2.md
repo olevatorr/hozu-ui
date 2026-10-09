@@ -89,3 +89,8 @@ steps and ended with `hozu check: ok · types ok · 0 errors, 0 warnings`.
   (the store's `--font-display` is one the owner should decide: decision 6 says system fonts).
 - HZ094's line numbers point into the installed `kit/theme.css`; in the partial-migration mode that file lacks the
   four reset lines, so the numbers differ from `kit/theme.css` in this repository by four.
+- **After the owner's decision B** (decisions.md): the store's fonts move to `features/site/brand.css` (imported after
+  the kit) with two accepted HZ094 entries, `--color-ink` is fixed by removing the store's copy, and the kit defaults to
+  `color-scheme: light` (dark only with `data-mode`); the store copy checks `0 errors, 0 warnings (2 accepted)`, the
+  journey has no flash, shift or error, and Fraunces is back (`img/store-brand-fonts.png`). Not covered by HZ094: the
+  kit's `html { background }` rule silently replaces the store's paper background (a plain CSS rule, not `@theme`).
