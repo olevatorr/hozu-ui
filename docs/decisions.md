@@ -16,7 +16,7 @@ The owner accepted the proposal's direction ([proposal.md](proposal.md) §8): �
 | 8 | Agent guidance | The kit's own `hozu docs ui` topic. |
 
 Spike 1 ([spike-1.md](spike-1.md)) answered 5 with evidence: one `Dialog` with an optional `open` serves both the native
-and the machine-bound form. Recommendation: yes (for the owner to confirm).
+and the machine-bound form.
 
 ## Licensing (2026-10-09, from the owner's question "could this UI infringe?")
 1. Component code and class lists are written here, in Hozu's form. Nothing is copied from paid sources (Tailwind Plus
@@ -64,3 +64,11 @@ and the machine-bound form. Recommendation: yes (for the owner to confirm).
    - `contract` and `request` are clear of every library.
 4. **For the owner to judge the style:** `img/icons-hozu-vs-lucide.png` (the hand-drawn set, six Lucide icons, and
    the nearest library icons).
+
+## 2026-10-09: after spike 1 (the owner: 「Ok都照你建議」)
+| # | Question | Decision |
+|---|---|---|
+| 5 | Machine-bound dialog through a component | **Settled:** one `Dialog` (`kit/dialog.ts`). Without `open` it opens natively (`commandfor` / `command`); with `open: is([...])` and `on: { close }` it follows the machine. No separate bound component. |
+| — | The five hand-drawn icons (`tenon`, `machine`, `contract`, `request`, `island`) | **Approved.** `island` may be revisited later. |
+
+The framework changes the spike found go into the lead's 0.27 ADR, not into this repository.

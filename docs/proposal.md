@@ -226,6 +226,11 @@ ui/
 | `hozu add component ui DataTable --from official` | — | copies one component (and the components it uses) |
 | `hozu add kit ui --sync` | regenerates `tv.ts` (`kits.ts:115`) | also, when `kit.lock.json` exists: files whose hash equals the lock are replaced by the new version; files changed locally are left alone and listed under `todo` with a three-way diff path; `--dry-run` prints the plan |
 
+- **Partial-migration install mode** (spike 1): the kit's `theme.css` resets Tailwind's palette, radii, shadows and
+  fonts, which is all-or-nothing (1 544 HZ026 in the admin trial app, 417 in the storefront). `--from official`
+  therefore installs without the reset while other screens still use raw classes, prints the HZ026 count the reset
+  would raise, and switches to the strict set once that count is 0. The install also syncs every kit's `tv.ts`
+  (another kit's goes stale), and reports `@theme` variables the app already defines with other values.
 - The official source is a versioned package read **at install time only** (`@hozu/ui-kit`, reserved in ADR 0045);
   nothing from it is imported at run time.
 - A sync that changes a component's render shows in `hozu check` as changed `sourceHash`es
@@ -253,6 +258,13 @@ ui/
 Form: the real authoring form (ADR 0045 A, B). `F2` marks sketches that need `spec`. Every component below is pure
 (0 B JS) unless marked client.
 
+- **Phase ① is about 23 components, not 8** (spike 1): both trial screens also needed table cells, navigation links,
+  pagination and the empty / problem / notice states. The source is in `kit/` (`Button`, `LinkButton`, `Input`,
+  `Field`, `Badge`, `Card`, `PageHeader`, `Metric`, `Dialog`, `DropdownMenu`, `MenuItem`, `EmptyState`, `Problem`,
+  `Notice`, `NavBar`, `NavLink`, `Pagination`, `Table`, `Th`, `Td`, `Tr`, `Icon`), with icons in `kit/icons/`.
+- **`spec` and `variant` coexist** (decision 1, confirmed by spike 1): variants pick looks (`intent`, `look`, `align`);
+  structured literal input appeared only in the table, where F2 would remove 16 of the admin screen's 35 `ui.use`.
+
 ### Phase ① Basics (what both trial apps built)
 
 | Component | Tag | Variants | Props (runtime) | Slots / children / events | Notes |
@@ -270,7 +282,7 @@ Form: the real authoring form (ADR 0045 A, B). `F2` marks sketches that need `sp
 | `EmptyState` | `div` | — | `title`, `body` | `action` slot (one CTA) | Polaris rule |
 | `Problem` | `div` | — | `title`, `body`, `code` | `action` (retry link) | for `failed` branches (HZ004) |
 | `Notice` | `div` | `tone: info \| success \| warning \| danger` | `message` | `dismiss` event | `role="status"`; see §6 |
-| `Dialog` | `dialog` | `size: sm \| md \| lg`, `side: center \| end` (sheet) | `id`, `open`, `title`, `description`, `closeLabel` | `footer`, children, `close` | native `commandfor` open; `ui.dialog({ open })` when bound |
+| `Dialog` | `dialog` | `size: sm \| md \| lg`, `side: center \| end` (sheet) | `id`, `title`, `description`, `open` (optional) | `footer`, children, `close` | **one component for both forms** (decided after spike 1): without `open` a `commandfor` button opens it natively; with `open: is([...])` + `on: { close }` it follows the machine |
 | `ConfirmDialog` | `dialog` | `intent: destructive \| primary` | `id`, `title`, `body`, `confirmLabel`, `cancelLabel`, `busy` | `confirm` | the "destructive confirmation" intent |
 | `Tabs` (link tabs) | `nav` | — | `label` | children of `Tab` | `Tab` = `a` with `current` → `aria-current` |
 | `Avatar` | `span` | `size` | `name`, `src` | — | initials fallback, `contrast-color()` on a data colour |
