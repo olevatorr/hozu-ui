@@ -72,3 +72,9 @@ and the machine-bound form.
 | — | The five hand-drawn icons (`tenon`, `machine`, `contract`, `request`, `island`) | **Approved.** `island` may be revisited later. |
 
 The framework changes the spike found go into the lead's 0.27 ADR, not into this repository.
+
+## 2026-10-10: Hozu 0.27.0
+Spike 2 ([spike-2.md](spike-2.md)) confirmed the fixes from ADR 0079 on the trial copies: HZ076 accepts `Dialog`'s
+`m-auto`, HZ072 catches shorthand overrides, HZ094 reports the store's `--color-ink` clash, computed `noindex` works,
+and installing a kit syncs every kit's `tv.ts`. Nothing in the decisions above changes. The kit's install mode
+(proposal §3.4) relies on HZ094 for its clash report.
