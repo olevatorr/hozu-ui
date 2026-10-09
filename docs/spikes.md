@@ -31,12 +31,12 @@ OKLCH → sRGB, WCAG 2 ratio and APCA Lc (SAPC 0.0.98G-4g constants). Selected r
 
 | Palette / theme | Pair | WCAG 2 | APCA Lc |
 |---|---|---|---|
-| Ledger light | ink on surface | 17.71 | 105 |
-| Ledger light | ink-muted (L 0.48) on surface | 6.53 | 82 |
-| Ledger light | ink-faint (L 0.58) on surface | **4.28** | 70 |
-| Ledger light | on-accent on accent (L 0.49 C 0.16 h 262) | 6.25 | −84 |
-| Ledger dark | ink-muted (L 0.73) on surface (L 0.20) | 7.57 | **−54** |
-| Ledger dark | ink-muted (L 0.78) on surface | 9.05 | −63 |
+| Grain light | ink on surface | 17.71 | 105 |
+| Grain light | ink-muted (L 0.48) on surface | 6.53 | 82 |
+| Grain light | ink-faint (L 0.58) on surface | **4.28** | 70 |
+| Grain light | on-accent on accent (L 0.49 C 0.16 h 262) | 6.25 | −84 |
+| Grain dark | ink-muted (L 0.73) on surface (L 0.20) | 7.57 | **−54** |
+| Grain dark | ink-muted (L 0.78) on surface | 9.05 | −63 |
 | Joinery light | signal red (L 0.64 C 0.22 h 35) as text on paper | **3.18** | 53 |
 | Joinery light | signal-text (L 0.53) on paper | 4.99 | 67 |
 | Console dark | ink-muted (L 0.68) on canvas | 6.86 | **−46** |

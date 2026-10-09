@@ -1,6 +1,6 @@
 # Proposal: the official Hozu UI kit
 
-Status: proposal for the owner, 2026-10-09. Evidence: [research.md](research.md) (external, with sources) and
+Status: direction accepted by the owner, 2026-10-09; answers in [decisions.md](decisions.md), first spike in [spike-1.md](spike-1.md). Evidence: [research.md](research.md) (external, with sources) and
 [spikes.md](spikes.md) (experiments on Hozu 0.26.4). Paths without a repository name are in the framework repository
 (`Tenon/`).
 
@@ -15,7 +15,7 @@ Status: proposal for the owner, 2026-10-09. Evidence: [research.md](research.md)
    positioning, `details`, links for table state). Charts are the one declared client component.
 4. Every state a data region can be in (first load, empty, failed, refreshing) has a kit answer, and the answers
    keep layout still (ADR 0067).
-5. Traditional Chinese is a first-class target: CJK type, Taiwan's market colours, kit strings translatable.
+5. Traditional Chinese is a first-class target: CJK type, market colours chosen per app (`up` / `down` tokens), kit strings translatable.
 6. Copy-into-the-app distribution that can still be upgraded (owner's decision).
 
 **Non-goals**
@@ -199,13 +199,13 @@ ui/
 | Overlay | `scrim` (does not flip with the mode) | dialog and sheet backdrops (spike S16: `ink/40` turns light grey in dark mode) |
 | Action | `accent`, `on-accent`, `accent-subtle`, `accent-text` | primary action fill, its text, tinted background, accent as text |
 | Status | `danger`, `warning`, `success`, `info`, each with `-subtle`, `-text`, `on-` | fills, tinted backgrounds, text-safe variants |
-| Trend | `up`, `down`, `flat` | metric deltas; **Taiwan theme: up = red, down = green** |
+| Trend | `up`, `down`, `flat` | metric deltas; neutral (`ink`) until the app sets `--trend-up` / `--trend-down` (decision 3, [decisions.md](decisions.md)) |
 | Data | `chart-1` … `chart-8` | categorical series, equal lightness, yellow last |
 
 - **Other tokens:** `--radius-control`, `--radius-card`, `--radius-pill` (role-named, daisyUI); `--shadow-overlay`
   only (borders do elevation elsewhere); `--text-*` steps below; `--animate-*` limited to `skeleton` pulse and the
   overlay enter/leave (Hozu owns data motion, ADR 0067 C3).
-- **Themes** are blocks in `theme.css`: `[data-theme=ledger]`, `[data-theme=joinery]`; dark is `color-scheme`, not a
+- **Themes** are blocks in `theme.css`: `[data-theme=grain]`, `[data-theme=joinery]`; dark is `color-scheme`, not a
   theme. **Density** is `[data-density=compact|comfortable]` setting `--spacing` (S2): no density variants anywhere.
 - **Export:** `hozu …` can print the tokens as DTCG 2025.10 JSON for Figma (research §3); never imported back.
 
@@ -222,7 +222,7 @@ ui/
 | Command | Today | Proposed (F4) |
 |---|---|---|
 | `hozu add kit ui` | empty `kit.ts` + `tv.ts` (`kits.ts:102`) | unchanged |
-| `hozu add kit ui --from official [--theme ledger]` | — | copies the official kit's files, writes `kit.lock.json`, runs the tv sync, adds `@hozu/variants` |
+| `hozu add kit ui --from official [--theme grain]` | — | copies the official kit's files, writes `kit.lock.json`, runs the tv sync, adds `@hozu/variants` |
 | `hozu add component ui DataTable --from official` | — | copies one component (and the components it uses) |
 | `hozu add kit ui --sync` | regenerates `tv.ts` (`kits.ts:115`) | also, when `kit.lock.json` exists: files whose hash equals the lock are replaced by the new version; files changed locally are left alone and listed under `todo` with a three-way diff path; `--dry-run` prints the plan |
 
@@ -387,7 +387,7 @@ export const Dialog = ui.component({
     ]),
 })
 ```
-(Built and opened in Chrome as written: spike S16, with one HZ076 warning that F7 removes. Open question Q5: a dialog bound to a machine passes `open` on the `dialog` element itself, which a caller cannot set
+(Spike 1 replaced this sketch: `kit/dialog.ts` takes an optional `open` and a `close` event, and serves both forms; see [spike-1.md](spike-1.md) §3. The original note: built and opened in Chrome as written, spike S16, with one HZ076 warning that F7 removes. Open question Q5: a dialog bound to a machine passes `open` on the `dialog` element itself, which a caller cannot set
 on a component root today; the sketch shows the native form. Either `Dialog` takes an `open` prop forwarded to
 `ui.dialog({ open })`, or bound dialogs stay hand-written. To verify in the first spike.)
 
@@ -421,10 +421,10 @@ Accessibility specs: the WAI-ARIA APG patterns, React Aria and Base UI keyboard 
 
 ## 5. Visual direction (three options)
 
-| | **A. Ledger** (recommended default) | **B. Joinery** | **C. Instrument** |
+| | **A. Grain** (recommended default) | **B. Joinery** | **C. Instrument** |
 |---|---|---|---|
 | For | back offices, finance and data dashboards | storefronts, content, marketing; Hozu's own brand | developer and ops consoles, dense monitoring |
-| Mood | a well-kept ledger: quiet neutrals, one ink-blue accent, numbers first | the site's Swiss poster (`site/DESIGN.md`): paper, ink, signal red, hard lines | dark-first instrument panel, monospace numerals |
+| Mood | planed timber: quiet neutrals, one ink-blue accent, numbers first | the site's Swiss poster (`site/DESIGN.md`): paper, ink, signal red, hard lines | dark-first instrument panel, monospace numerals |
 | Base text | 14 px / 20 (UI), 16 / 28 prose (CJK 1.75) | 16 px / 26, display 900 uppercase for page titles only | 13 px / 20, 12 px minimum (CJK 13) |
 | Type scale (px) | 12 · 13 · 14 · 16 · 20 · 24 · 32 (metric 28 / 32) | 13 · 16 · 20 · 28 · 40 · 64 | 11 · 12 · 13 · 15 · 18 · 22 |
 | Fonts (no external files) | `system-ui, -apple-system, "Segoe UI", "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif`; numbers `tabular-nums` | `"Helvetica Neue", Arial, "PingFang TC", "Noto Sans TC", sans-serif`; `ui-monospace` for figures | sans as A; `ui-monospace, "SF Mono", Menlo, monospace` for every number |
@@ -437,9 +437,9 @@ Accessibility specs: the WAI-ARIA APG patterns, React Aria and Base UI keyboard 
 | Contrast (spike) | ink 17.7:1; muted 6.5:1 (light), 9.1:1 at L 0.78 (dark); accent text 6.4:1 | ink 16.4:1; signal as text 3.18:1 → `signal-text` 4.99:1 | muted 6.9:1 but APCA −46 → raise to L ≥ 0.76 |
 | Motion | 120 ms colour, overlays 160 ms enter / 120 ms leave; Hozu's data fades unchanged | the site's rise and shake for marketing pages only | none beyond Hozu's fades |
 
-**Recommendation:** ship **A. Ledger** as the default and **B. Joinery** as the second theme in the same release.
-Two themes over one closed token set prove that theming works (an agent switches `data-theme`, nothing else), Ledger
-fits phase ② and the owner's finance context (Taiwan trend colours as the `zh-Hant` default, Q3), and Joinery ties
+**Recommendation:** ship **A. Grain** as the default and **B. Joinery** as the second theme in the same release.
+Two themes over one closed token set prove that theming works (an agent switches `data-theme`, nothing else), Grain
+fits phase ② and the owner's finance context (each app picks its trend colours, decision 3), and Joinery ties
 the kit to Hozu's own brand. C waits for demand.
 
 ## 6. Notices without a global store (the trial's most repeated ask)
@@ -477,11 +477,11 @@ None of F1–F9 bends a CLAUDE.md principle. F10 does, and is raised here rather
    And WCAG 2 AA as the gate with APCA printed alongside (recommended), or APCA as a gate?
 3. **Trend colours:** Taiwan convention (red up) as the default in `zh-Hant` apps, a theme switch, or a per-app
    choice in `hozu add kit --trend east|west`?
-4. **Theme set:** Ledger + Joinery in the first release (recommended), or one theme first?
+4. **Theme set:** Grain + Joinery in the first release (recommended), or one theme first?
 5. **Bound dialogs:** may a component forward `open` to its `dialog` root (`ui.dialog({ open })`), or do machine-bound
    dialogs stay hand-written?
 6. **Fonts:** system stacks only (no downloads, as the site does), or an optional self-hosted Latin face for
-   Ledger's numbers?
+   Grain's numbers?
 7. **Where the official source lives:** this repository published as `@hozu/ui-kit` (install-time only), or inside the
    framework monorepo next to `create-hozu`?
 8. **Kit topic:** a `hozu docs ui` topic shipped by the kit (outside the framework's skill), or a row in the
@@ -489,7 +489,7 @@ None of F1–F9 bends a CLAUDE.md principle. F10 does, and is raised here rather
 
 ## 9. Recommended first step
 A two-day spike in a scratch app, no framework change, that decides the uncertain parts before any ADR:
-1. Write `theme.css` (Ledger + Joinery, closed token set) and eight phase-① components (`Button`, `LinkButton`,
+1. Write `theme.css` (Grain + Joinery, closed token set) and eight phase-① components (`Button`, `LinkButton`,
    `Input`, `Field`, `Badge`, `Card`, `Metric`, `Dialog`) plus `EmptyState`, `Problem` and the `skeleton` utility.
 2. Rebuild one screen of each trial app with them (admin's orders list with a dialog, the store's product grid), and
    measure: lines changed, HZ026/HZ072 count, `!` overrides, `hozu browse` shift and flashes, contrast table for both
