@@ -13,7 +13,7 @@ export const Icon = ui.component({
   styles,
   props: z.object({ d: z.string() }),
   render: ({ props }) =>
-    ui.svg({ viewBox: '0 0 24 24', 'stroke-width': '1.75', 'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'aria-hidden': 'true' }, [
+    ui.svg({ viewBox: '0 0 24 24', 'stroke-width': '2', 'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'aria-hidden': 'true' }, [
       ui.path({ d: props.d }),
     ]),
 })

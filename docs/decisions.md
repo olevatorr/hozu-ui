@@ -29,3 +29,38 @@ and the machine-bound form. Recommendation: yes (for the owner to confirm).
    to Hozu's joinery vocabulary: the quiet, planed surface of the wood.
 4. No theme imitates one product's distinctive look. Grain is a neutral data theme with its own accent and scale;
    Joinery derives from Hozu's own site (`site/DESIGN.md`).
+
+## Icons (2026-10-09, the owner: 「Ok都照你建議」, option C)
+1. **Standard icons are Lucide (ISC).** The kit copies only the path data of the icons an app uses, into
+   `kit/icons/lucide.ts`, generated from the published `lucide-static` package by `scripts/lucide-icons.mjs` (23 icons
+   today). `kit/icon.ts` draws one path; no JavaScript library ships. The export name is the Lucide name (no comments
+   in the codebase), and `THIRD_PARTY_NOTICES.md` says that every export in that file is from Lucide and carries the
+   licence text.
+2. **Hozu's own icons are hand-drawn** in `kit/icons/hozu.ts` on Lucide's grid: `tenon` (logo, joint), `machine`,
+   `contract`, `request`, `island`. The first draft of `lock` was replaced by Lucide's `lock` (below).
+3. **Similarity check:** `scripts/icon-similarity.mjs` normalises every path (absolute commands, curves and arcs
+   flattened, 64 points spaced evenly along the strokes, scaled to the 24 px grid) and reports the mean
+   nearest-point distance to every icon of Lucide 1.54.0, Feather 4.29.2, Heroicons 2.2.0 (outline and solid),
+   Tabler 3.49.0 (outline) and Material Symbols 0.48.0 (outlined), installed in a scratch folder, not committed:
+   12 163 icons. Calibration: each of the 23 Lucide exports finds its own source at 0.00; the same concept drawn by
+   another library lands at 0.0–0.7 (e.g. Feather `download` 0.64, Heroicons `arrow-top-right-on-square` 0.40 for
+   `external-link`). Bands: below 0.35 = near-identical (act), 0.35–0.75 = compare by eye.
+
+   Result (2026-10-09):
+   ```
+   look tenon      Lucide:table-properties 0.73 · Tabler outline:dice-5 0.73 · Tabler outline:helicopter-landing 0.74
+   look machine    Lucide:infinity 0.68 · Lucide:voicemail 0.68 · Feather:voicemail 0.70
+   ok   contract   Tabler outline:text-wrap 0.80 · Tabler outline:align-left 0.86 · Tabler outline:list-search 0.96
+   ok   request    Material Symbols outlined:hanami_dango 1.10 · Lucide:workflow 1.14 · Material Symbols outlined:diagonal_line 1.15
+   look island     Material Symbols outlined:keyboard_capslock 0.73 · Tabler outline:sunset-2 0.96 · Tabler outline:christmas-tree 0.98
+   NEAR lockFirstDraft Tabler outline:lock 0.34 · Tabler outline:lock-password 0.53 · Tabler outline:lock-down 0.55
+   unreadable library files: 19
+   6 hand-drawn icons, 12163 library icons, 1 near-identical (< 0.35 px mean nearest-point distance on the 24 px grid), 3 to compare by eye (< 0.75 px)
+   ```
+   - `lock` (first draft) was near-identical to Tabler's `lock` (0.34): **replaced** by Lucide's `lock`, licensed.
+   - `tenon`, `machine` and `island` sit in the compare-by-eye band against unrelated icons (a table, an infinity
+     sign, a voicemail glyph, a caps-lock arrow): the side-by-side in `img/icons-hozu-vs-lucide.png` shows different
+     drawings of different things, so they stay.
+   - `contract` and `request` are clear of every library.
+4. **For the owner to judge the style:** `img/icons-hozu-vs-lucide.png` (the hand-drawn set, six Lucide icons, and
+   the nearest library icons).

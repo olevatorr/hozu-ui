@@ -1,5 +1,6 @@
 import { ui } from '@hozu/core'
 import { z } from 'zod'
+import { x } from './icons/lucide.ts'
 import { tv } from './tv.ts'
 
 const emptyStyles = tv({
@@ -51,7 +52,8 @@ const noticeStyles = tv({
   slots: {
     base: 'flex max-w-sm items-start gap-3 rounded-card border border-line bg-surface-raised px-4 py-3 text-sm text-ink shadow-overlay data-[tone=danger]:border-danger data-[tone=danger]:text-danger-text',
     message: 'flex-1',
-    close: 'cursor-pointer rounded-control px-1 text-xs font-semibold text-ink-muted hover:text-ink',
+    close: 'cursor-pointer rounded-control p-0.5 text-ink-muted hover:text-ink',
+    closeIcon: 'size-4 fill-none stroke-current',
   },
   variants: { placement: { inline: {}, toast: { base: 'fixed right-4 bottom-4 z-50' } } },
   defaultVariants: { placement: 'toast' },
@@ -65,6 +67,8 @@ export const Notice = ui.component({
   render: ({ props, on, classes }) =>
     ui.div({ role: 'status', 'aria-live': 'polite', 'data-tone': props.tone }, [
       ui.p({ class: classes.message }, [props.message]),
-      ui.button({ type: 'button', class: classes.close, 'aria-label': props.closeLabel, keys: ['Escape'], on: { click: on.dismiss } }, ['✕']),
+      ui.button({ type: 'button', class: classes.close, 'aria-label': props.closeLabel, keys: ['Escape'], on: { click: on.dismiss } }, [
+        ui.svg({ class: classes.closeIcon, viewBox: '0 0 24 24', 'stroke-width': '2', 'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'aria-hidden': 'true' }, [ui.path({ d: x })]),
+      ]),
     ]),
 })

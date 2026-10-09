@@ -11,7 +11,7 @@ import { PageHeader } from '../../kit/page-header.ts'
 import { EmptyState, Notice, Problem } from '../../kit/states.ts'
 import { Table, Td, Th, Tr } from '../../kit/table.ts'
 import { orderDetail, orders } from '../../routes.ts'
-import { icons } from '../../ui/icons.ts'
+import { externalLink, packageIcon } from '../../kit/icons/lucide.ts'
 import { OrderStatus } from '../shared.ts'
 import { Dismiss, exportOrders, listOrders, ordersMachine, ProcessSelected, SelectOrder, SelectPage } from './model.ts'
 
@@ -32,7 +32,7 @@ export const OrdersList = ui.view({
       ui.use(PageHeader, {
         props: { title: 'Orders', description: 'Every order from the storefront and the shop floor, newest first.' },
         slots: {
-          actions: ui.use(LinkButton, { props: { href: ui.link(exportOrders, { status: search.status, q: search.q }) }, slots: { icon: ui.use(Icon, { props: { d: icons.external } }) } }, ['Export CSV']),
+          actions: ui.use(LinkButton, { props: { href: ui.link(exportOrders, { status: search.status, q: search.q }) }, slots: { icon: ui.use(Icon, { props: { d: externalLink } }) } }, ['Export CSV']),
         },
       }),
       ui.query(listOrders, { q: search.q, status: search.status, page: search.page }, {
@@ -56,7 +56,7 @@ export const OrdersList = ui.view({
               ]),
               ui.form({ ref: bulk, class: 'flex items-center gap-3', on: { submit: ui.send(ProcessSelected, { ids: ui.dom.formAll('ids') }) } }, [
                 ui.span({ class: 'text-xs text-ink-muted tabular-nums' }, [`${ctx.selected.length} selected`]),
-                ui.use(Button, { variant: { size: 'sm' }, props: { type: 'submit', busy: is(['processing']) }, slots: { icon: ui.use(Icon, { props: { d: icons.inventory } }) } }, ['Mark as processing']),
+                ui.use(Button, { variant: { size: 'sm' }, props: { type: 'submit', busy: is(['processing']) }, slots: { icon: ui.use(Icon, { props: { d: packageIcon } }) } }, ['Mark as processing']),
               ]),
             ]),
             p.rows.length === 0

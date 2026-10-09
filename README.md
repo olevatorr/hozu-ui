@@ -11,6 +11,6 @@ Research and design for the official UI kit of [Hozu](https://hozu.org) (`@hozu/
 - [docs/spikes.md](docs/spikes.md): experiments on Hozu 0.26.4.
 - [docs/decisions.md](docs/decisions.md): the owner's decisions, licensing.
 - [docs/spike-1.md](docs/spike-1.md): the kit on two real trial screens, with measurements and screenshots.
-- `kit/`: the kit source (themes Grain and Joinery, 23 components); `tools/`: install and contrast scripts; `spike/`: the redone screens.
+- `kit/`: the kit source (themes Grain and Joinery, 23 components); `tools/`: install and contrast scripts; `scripts/`: Lucide extraction and the icon similarity check; `spike/`: the redone screens.
 
 Licence: MIT ([LICENSE](LICENSE)); see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

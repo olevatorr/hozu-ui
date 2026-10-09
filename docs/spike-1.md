@@ -248,5 +248,8 @@ Before: `img/admin-orders-before.png`, `img/store-shop-before.png`. Q5: `img/q5-
 | 5 | **F6**: HZ026 suggestions by property and token role, not by spelling | §2 |
 | 6 | **F2**: `spec` for tables (then charts) | 16 of 35 uses on the admin screen are cells |
 
+Icons were settled after the spike (decisions.md, "Icons"): Lucide path data in `kit/icons/lucide.ts`, Hozu's own in
+`kit/icons/hozu.ts`; the admin screen now uses `externalLink` and `packageIcon` instead of the trial app's paths.
+
 Not proven necessary by this spike: F1 (`about`), F3 (kit messages), F5 (the design check as diagnostics; its value
 was shown by the border failure, but a script found it), F8, F9, F10.
