@@ -1,6 +1,6 @@
 {
   "name": "@hozu/ui-kit",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "The official Hozu UI components, copied into an app by `hozu add kit ui --from official`",
   "license": "MIT",
   "type": "module",
