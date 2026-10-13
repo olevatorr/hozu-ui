@@ -1,1 +1,60 @@
 @import "tailwindcss";
+
+:root:root {
+  background: var(--color-paper);
+  scroll-padding-top: 6rem;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-coal) var(--color-paper);
+}
+body {
+  margin: 0;
+  background: var(--color-paper);
+  color: var(--color-coal);
+  font-family: var(--font-poster);
+  overflow-x: clip;
+}
+button:not(:disabled),
+summary {
+  cursor: pointer;
+}
+[data-poster] :focus-visible,
+[data-chrome] :focus-visible {
+  outline: 3px solid var(--color-signal);
+  outline-offset: 3px;
+}
+[data-grid] {
+  background-image: repeating-linear-gradient(
+    90deg,
+    transparent 0 calc(100% / 6 - 1px),
+    rgb(17 16 16 / 0.05) calc(100% / 6 - 1px) calc(100% / 6)
+  );
+}
+[data-rise] > :nth-child(2) > * {
+  animation-delay: 80ms;
+}
+[data-rise] > :nth-child(3) > * {
+  animation-delay: 160ms;
+}
+[data-rise] > :nth-child(4) > * {
+  animation-delay: 240ms;
+}
+[data-stage] {
+  background-color: var(--color-canvas);
+  background-image: radial-gradient(var(--color-line) 1px, transparent 1px);
+  background-size: 18px 18px;
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}
+pre {
+  scrollbar-color: var(--color-paper) var(--color-coal);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -5,3 +5,4 @@ dist
 .env.local
 .vercel
 ui/
+features/site/kit-version.ts

@@ -1,0 +1,31 @@
+@theme {
+  --color-paper: #f1ede4;
+  --color-card: #fbf9f4;
+  --color-coal: #111010;
+  --color-signal: #fb3a0e;
+  --color-ember: #b52705;
+  --color-pass: #2fa36b;
+  --color-sand: #d8cdbb;
+  --font-poster: "Helvetica Neue", Arial, "PingFang TC", "Noto Sans TC", sans-serif;
+  --font-code: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --animate-rise: rise 0.7s cubic-bezier(0.2, 0.9, 0.2, 1) both;
+  --animate-menu: menu 0.36s cubic-bezier(0.2, 0.9, 0.2, 1) both;
+  @keyframes rise {
+    from {
+      transform: translateY(110%) skewY(8deg);
+      opacity: 0;
+    }
+    to {
+      transform: none;
+      opacity: 1;
+    }
+  }
+  @keyframes menu {
+    from {
+      clip-path: inset(0 0 100% 0);
+    }
+    to {
+      clip-path: inset(0 0 0 0);
+    }
+  }
+}

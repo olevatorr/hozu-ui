@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "kit": "node scripts/copy-kit.mjs",
+    "kit": "node scripts/copy-kit.mjs && hozu add kit ui --sync",
     "dev": "npm run kit && hozu dev",
     "check": "npm run kit && hozu check",
     "build": "npm run kit && hozu check && hozu export --out dist && node scripts/cname.mjs"

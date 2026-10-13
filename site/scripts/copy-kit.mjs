@@ -20,3 +20,6 @@ if (renamed === kit && !kit.includes("id: 'ui'")) throw new Error('ui/kit.ts: no
 writeFileSync(kitFile, renamed)
 
 console.log(`copied the kit into ${to.pathname}`)
+
+const { version } = JSON.parse(readFileSync(new URL('../../package.json', import.meta.url), 'utf8'))
+writeFileSync(new URL('../features/site/kit-version.ts', import.meta.url), `export const kitVersion = '${version}'\n`)
