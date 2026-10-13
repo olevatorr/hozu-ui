@@ -187,7 +187,7 @@ const specimen = part(
       {
         id,
         'aria-labelledby': `${id}-name`,
-        class: 'grid min-w-0 scroll-mt-28 gap-6 border-t-4 border-coal pt-8',
+        class: 'grid min-w-0 scroll-mt-9 gap-6 border-t-4 border-coal pt-8 lg:scroll-mt-0',
       },
       [
         ui.div({ class: 'grid gap-2' }, [
@@ -390,7 +390,7 @@ export const Gallery = ui.view({
               {
                 'aria-label': 'Components on this page',
                 class:
-                  'sticky top-[4.75rem] z-20 -mx-5 flex gap-6 overflow-x-auto border-b-4 border-coal bg-paper px-5 py-3 lg:top-28 lg:mx-0 lg:grid lg:content-start lg:gap-5 lg:self-start lg:overflow-visible lg:border-0 lg:bg-transparent lg:p-0',
+                  'sticky top-[4.5rem] z-20 -mx-5 flex gap-6 overflow-x-auto border-b-4 border-coal bg-paper px-5 py-3 lg:top-28 lg:mx-0 lg:grid lg:content-start lg:gap-5 lg:self-start lg:overflow-visible lg:border-0 lg:bg-transparent lg:p-0',
               },
               [
                 ...index.map(([group, items]) =>

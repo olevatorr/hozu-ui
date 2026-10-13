@@ -100,7 +100,7 @@ export const Home = ui.view({
                 ui.h1(
                   {
                     id: 'hero',
-                    class: 'text-5xl leading-[0.9] font-black tracking-tight uppercase sm:text-6xl md:text-7xl',
+                    class: 'text-[2.4rem] leading-[0.9] font-black tracking-tight uppercase min-[390px]:text-5xl sm:text-6xl md:text-7xl lg:text-6xl xl:text-7xl',
                     'data-rise': '',
                   },
                   [
@@ -112,9 +112,16 @@ export const Home = ui.view({
                 ui.p({ class: 'mt-6 max-w-lg text-lg text-pretty' }, [
                   'Buttons, forms, tables and dialogs that live inside your app as plain files. Ask for a change in your own words, and your AI edits them like the rest of your code.',
                 ]),
-                ui.div({ class: 'mt-8 flex flex-wrap gap-3' }, [
+                ui.div({ class: 'relative mt-8 flex flex-wrap gap-3' }, [
                   posterButton(ui.link(components, null), 'See every component →', true),
                   posterButton('#devtools', 'Place one with DevTools', false),
+                  ui.img({
+                    src: ui.asset(new URL('../../assets/peg-suit-hello.svg', import.meta.url)),
+                    width: 210,
+                    height: 250,
+                    alt: '',
+                    class: 'pointer-events-none absolute right-0 bottom-0 hidden h-auto w-20 min-[375px]:block sm:hidden',
+                  }),
                 ]),
               ]),
               ui.div({ class: 'relative min-w-0', 'data-theme': ctx.theme }, [
