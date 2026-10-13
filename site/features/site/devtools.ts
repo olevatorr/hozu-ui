@@ -68,23 +68,23 @@ export const devtoolsSection = part((page: boolean) =>
         ),
         page ? ui.h1({ id: 'devtools-title', class: title }, headline) : ui.h2({ id: 'devtools-title', class: title }, headline),
         ui.p({ class: 'mt-6 max-w-2xl text-lg text-paper/85 text-pretty' }, [
-          'DevTools knows Hozu UI. Pick a component from the kit, put it where you want it on your running page, and say what it is for. Your agent gets a request with the file, the line and the exact call to write.',
+          'DevTools knows Hozu UI. Drag a component from the kit onto your running page, see it where it will land, and say what it is for. Your agent gets a request with the file, the line and the exact call to write.',
         ]),
         ui.ol({ class: 'mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4' }, [
           step(
             '01',
             'Open Assets',
-            'Run npx hozu dev, open DevTools, then Assets. Hozu UI comes first: the components you have, and the ones you can still add.',
+            'Run npx hozu dev, open DevTools, then Assets. It docks beside your page. Hozu UI comes first: every component and variant, with examples.',
           ),
-          step('02', 'Place it', 'Select a part of your page. Choose a component and a variant, then Place before, after or inside the part.'),
+          step('02', 'Drag it in', 'Drag a variant onto the page. It shows where it would land before you let go. Click it later to edit, or drag it again.'),
           step('03', 'Say why', 'Write a note in your words. Or change a component itself: one request edits it everywhere it is used.'),
           step('04', 'Hand it over', 'Copy for AI or Save request. Your agent installs what is missing, places it, then runs hozu check.'),
         ]),
         ui.div({ class: 'mt-14' }, [
           shot(
             ui.asset(new URL('../../assets/dt-assets.webp', import.meta.url)),
-            'Hozu DevTools Assets board: the Hozu UI kit first, with Button and LinkButton in each intent and size',
-            'Assets → Hozu UI: every component and variant, drawn from your app.',
+            'Hozu DevTools Assets docked beside a task list page: the Hozu UI kit first, with Button in each intent and size',
+            'Assets docks beside your page: every component and variant, drawn from your app.',
           ),
         ]),
         ui.div(
@@ -94,13 +94,13 @@ export const devtoolsSection = part((page: boolean) =>
           [
             shot(
               ui.asset(new URL('../../assets/dt-place.webp', import.meta.url)),
-              'The Button detail in DevTools: its variants and properties, the intent set to primary, a note, and Place before, after and inside',
-              'Next to the selected heading: intent primary, a note, Place after.',
+              'A primary Button dragged under the Tasks heading: the page shows it in place, labelled Place after Heading Tasks',
+              'While you drag, the page shows the component where it would land.',
             ),
             shot(
               ui.asset(new URL('../../assets/dt-request.webp', import.meta.url)),
-              'The DevTools request panel with one item: Add ui.Button intent primary after the Tasks heading, and Copy for AI',
-              'The request holds the change. Copy for AI, or Save request.',
+              'The placed Button marked Pending on the page, and the Changes panel with one item: Add ui.Button intent primary after the Tasks heading, its note, and Copy for AI',
+              'It stays on the page as Pending until your agent has built it. Copy for AI, or Save request.',
             ),
           ],
         ),

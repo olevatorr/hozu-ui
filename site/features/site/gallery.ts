@@ -255,7 +255,7 @@ const specimen = part(
                     },
                     ['With DevTools'],
                   ),
-                  ui.dd({ class: 'text-sm' }, [`Assets → Hozu UI → ${installs[0]}, then Place it next to the part you selected.`]),
+                  ui.dd({ class: 'text-sm' }, [`Assets → Hozu UI → ${installs[0]}, then drag it onto your page where you want it.`]),
                 ]),
               ],
             ),
