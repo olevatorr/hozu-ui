@@ -63,7 +63,7 @@ export const Top = ui.view({
         ),
         ui.div(
           {
-            class: 'mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-4',
+            class: 'mx-auto flex h-[4.25rem] max-w-6xl items-center justify-between gap-4 px-5',
           },
           [
             ui.a(
