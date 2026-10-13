@@ -20,6 +20,7 @@ An app you already have:
 
 ```sh
 npx -p @hozu/cli@next hozu migrate        # on Hozu 0.31 or older
+npm install @hozu/variants@next              # the kit's styles run on it
 npm install -D @hozu/ui-kit
 npx hozu add kit ui --from official       # or one: npx hozu add component ui Button --from official
 ```

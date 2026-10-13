@@ -276,6 +276,7 @@ export const Home = ui.view({
                     ctx.copied === 'npx -p @hozu/cli@next hozu migrate',
                     false,
                   ),
+                  command('npm install @hozu/variants@next', ctx.copied === 'npm install @hozu/variants@next', false),
                   command('npm install -D @hozu/ui-kit', ctx.copied === 'npm install -D @hozu/ui-kit', false),
                   command('npx hozu add kit ui --from official', ctx.copied === 'npx hozu add kit ui --from official', false),
                   ui.p({ class: 'text-sm text-coal/70' }, ['Or one at a time: npx hozu add component ui Button --from official']),
