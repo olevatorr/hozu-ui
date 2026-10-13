@@ -6,7 +6,9 @@ const root = fileURLToPath(new URL('..', import.meta.url))
 const kit = join(root, 'kit')
 const files = {}
 const sources = [
-  ...readdirSync(kit).filter((f) => f.endsWith('.ts') && f !== 'kit.ts' && f !== 'tv.default.ts'),
+  ...readdirSync(kit).filter(
+    (f) => f.endsWith('.ts') && f !== 'kit.ts' && f !== 'tv.default.ts' && f !== 'previews.ts',
+  ),
   ...readdirSync(join(kit, 'icons')).map((f) => `icons/${f}`),
 ]
 for (const file of sources.sort()) {
@@ -24,7 +26,13 @@ const catalog = {
   styles: 'theme.css',
   tv: 'tv.default.ts',
   themes: ['grain', 'joinery'],
+  previews: 'previews.ts',
+  parts: { Table: ['Tr', 'Th', 'Td'], DropdownMenu: ['MenuItem'], NavBar: ['NavLink'] },
+  pickers: { Icon: { prop: 'd', from: ['icons/lucide.ts', 'icons/hozu.ts'] } },
   files,
 }
+const declared = new Set(Object.values(files).flatMap((f) => f.components))
+for (const name of [...Object.keys(catalog.parts), ...Object.values(catalog.parts).flat(), ...Object.keys(catalog.pickers)])
+  if (!declared.has(name)) throw new Error(`catalog names ${name}, which no kit file declares`)
 writeFileSync(join(root, 'catalog.json'), `${JSON.stringify(catalog, null, 2)}\n`)
 console.log(`${Object.values(files).reduce((n, f) => n + f.components.length, 0)} components in ${sources.length} files`)
