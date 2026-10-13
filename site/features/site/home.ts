@@ -117,7 +117,14 @@ export const Home = ui.view({
                   posterButton('#devtools', 'Place one with DevTools', false),
                 ]),
               ]),
-              ui.div({ class: 'min-w-0', 'data-theme': ctx.theme }, [
+              ui.div({ class: 'relative min-w-0', 'data-theme': ctx.theme }, [
+                ui.img({
+                  src: ui.asset(new URL('../../assets/peg-suit-hello.svg', import.meta.url)),
+                  width: 210,
+                  height: 250,
+                  alt: 'Peg, the Hozu checker, in a suit and bow tie, waving',
+                  class: 'pointer-events-none absolute -right-4 -bottom-3 z-10 hidden h-auto w-24 sm:block lg:-right-10',
+                }),
                 ui.div(
                   {
                     class: 'border-4 border-coal shadow-[10px_10px_0_var(--color-coal)]',
@@ -377,7 +384,16 @@ export const Home = ui.view({
               },
               ['Pick a component.'],
             ),
-            posterButton(ui.link(components, null), 'Open the catalogue →', true),
+            ui.div({ class: 'flex items-end gap-6' }, [
+              ui.img({
+                src: ui.asset(new URL('../../assets/peg-suit-present.svg', import.meta.url)),
+                width: 250,
+                height: 290,
+                alt: 'Peg in a suit, presenting a button on a tray',
+                class: 'h-auto w-32 md:w-40',
+              }),
+              posterButton(ui.link(components, null), 'Open the catalogue →', true),
+            ]),
           ],
         ),
       ]),

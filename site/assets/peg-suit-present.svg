@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-40 -40 250 290" role="img" aria-label="Peg in a suit and bow tie, presenting a button on a tray"><style>
+.peg{animation:bob 2.6s ease-in-out infinite;transform-box:view-box;transform-origin:75px 236px}
+.eyes{animation:blink 5.2s infinite;transform-box:view-box;transform-origin:77px 98px}
+.tray{animation:tray 2.6s ease-in-out infinite;transform-box:view-box;transform-origin:150px 20px}
+.spark{animation:spark 2.6s ease-in-out infinite}
+.bow{}
+@keyframes bob{0%,100%{transform:none}50%{transform:translateY(-5px)}}
+@keyframes blink{0%,93%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
+@keyframes tray{0%,100%{transform:rotate(0)}50%{transform:rotate(-3deg)}}
+@keyframes spark{0%,40%,100%{opacity:0}55%,75%{opacity:1}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}</style>
+<ellipse cx="75" cy="244" rx="58" ry="8" fill="#111010" fill-opacity="0.18"/><g class="peg"><rect x="18" y="20" width="114" height="216" rx="48" fill="#fb3a0e"/>
+<rect x="38" y="44" width="16" height="80" rx="8" fill="#fff" fill-opacity="0.28"/>
+<defs><clipPath id="p"><rect x="18" y="20" width="114" height="216" rx="48"/></clipPath></defs>
+<g clip-path="url(#p)"><rect x="0" y="146" width="150" height="100" fill="#111010"/>
+<path d="M75 146 L52 146 L75 200 L98 146 Z" fill="#fbf9f4"/>
+<path d="M52 146 L44 176 L62 172 L75 200 Z M98 146 L106 176 L88 172 L75 200 Z" fill="#2a2726" stroke="#f1ede4" stroke-width="2"/>
+<circle cx="75" cy="212" r="4" fill="#f1ede4"/><circle cx="75" cy="226" r="4" fill="#f1ede4"/>
+<rect x="100" y="182" width="18" height="6" fill="#f1ede4"/></g>
+<rect x="18" y="20" width="114" height="216" rx="48" fill="none" stroke="#111010" stroke-width="7"/>
+<g class="eyes"><ellipse cx="60" cy="96" rx="9" ry="11" fill="#111010"/><ellipse cx="94" cy="96" rx="9" ry="11" fill="#111010"/></g>
+<path d="M58 122 Q77 140 96 122" fill="none" stroke="#111010" stroke-width="7" stroke-linecap="round"/>
+<g class="bow"><path d="M60 148 L75 156 L60 164 Z M90 148 L75 156 L90 164 Z" fill="#fb3a0e" stroke="#111010" stroke-width="3"/><circle cx="75" cy="156" r="5" fill="#fb3a0e" stroke="#111010" stroke-width="3"/></g>
+<path d="M22 166 Q6 176 4 194" fill="none" stroke="#111010" stroke-width="7" stroke-linecap="round"/><circle cx="4" cy="200" r="10" fill="#fb3a0e" stroke="#111010" stroke-width="6"/>
+<g class="tray"><path d="M128 150 Q156 130 152 40" fill="none" stroke="#111010" stroke-width="7" stroke-linecap="round"/>
+<ellipse cx="152" cy="30" rx="52" ry="9" fill="#f1ede4" stroke="#111010" stroke-width="5"/>
+<rect x="122" y="-4" width="60" height="26" rx="6" fill="#fb3a0e" stroke="#111010" stroke-width="5"/>
+<path d="M136 9 L168 9" stroke="#fbf9f4" stroke-width="5" stroke-linecap="round"/>
+<circle cx="152" cy="40" r="10" fill="#fb3a0e" stroke="#111010" stroke-width="6"/>
+<g class="spark" stroke="#111010" stroke-width="4" stroke-linecap="round"><path d="M112 -18 L104 -28"/><path d="M152 -22 L152 -34"/><path d="M192 -18 L200 -28"/></g></g></g></svg>
