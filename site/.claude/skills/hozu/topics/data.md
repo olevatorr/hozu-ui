@@ -1,0 +1,156 @@
+# Data: queries, mutations, tags, fn, resolvers
+
+**First: whose data is it?** It decides `runs`, `scope` and where it is stored. When the request does not say, ask.
+
+| The data | `runs` / `scope` | Stored in |
+|---|---|---|
+| the visitor's own, no sign-in (a watchlist, favourites, settings) | `'browser'` / `'user'` | `localStorage`, in `fetch.ts` (`hozu docs recipes`) |
+| a signed-in user's, on every device | `'server'` / `'user'` + `access` | the app's database |
+| everyone's (posts, a shared board) | `'server'` / `'public'`; `access` on its mutations | the app's database |
+| a public third-party API (quotes, weather) | `'either'` / `'public'` | nowhere: read it |
+
+The arrays in Hozu's examples and scaffolds are stand-ins: one list for every visitor, gone on restart. Never ship
+one: use the store above (a demo: the JSON-file recipe).
+
+```ts
+export const itemsTag = tag({ param: null })                    // tag({ param: z.string() }) → itemTag(id)
+export const listItems = query({
+  input: z.object({}), output: z.array(Item),
+  scope: 'public',                  // 'user' = per visitor (server-run: needs project({ session }))
+  freshness: 'static',              // | 'request' | { revalidate: s } | { swr: s } | 'live' | { poll: s }
+  tags: () => [itemsTag()],          // optional; (input) => [...]
+  runs: 'server',                   // where the implementation lives: 'server' | 'browser' | 'either' (required); hozu docs fetch
+})
+export const getItem = query({ input: Key, output: Item, errors: { NotFound: Key }, scope: 'public',
+  freshness: 'static', tags: (k) => [itemTag(k.id)], runs: 'server' })
+export const addItem = mutation({
+  input: z.object({ title: z.string().min(2, 'Use at least 2 characters') }), output: Item,
+  errors: { Duplicate: z.object({ title: z.string() }) },          // optional: declared failures
+  invalidates: () => [itemsTag()],                                  // refreshes queries with these tags
+  runs: 'server',
+  access: 'anyone',                 // who may run it (required on the server; user queries too): hozu docs auth
+})
+export const visible = fn({                   // computation: pure JS; may call const/function helpers of this module
+  input: z.object({ items: z.array(Item), show: Show }), output: z.array(Item),
+  impl: ({ items, show }) => items.filter((i) => show === 'all' || !i.done),
+})
+```
+```ts
+export default app({ resolvers: resolvers(project, (implement) => [
+  implement(listItems, () => db.items.list()),                     // db: the app's database client
+  implement(getItem, async ({ id }, { fail }) => (await db.items.get(id)) ?? fail('NotFound', { id })),
+  implement(addItem, ({ title }, { fail, session }) => /* … */ ),
+]) })
+```
+- `runs` is required on every query and mutation. `'server'` resolvers live in `app.ts` (or `features/<name>/server.ts`)
+  and get the schema-parsed input; `'browser'` / `'either'` live in `fetch.ts` (`hozu docs fetch`).
+- **Query resolvers only read;** writes happen in mutation and endpoint resolvers (see --more).
+- User data (`scope: 'user'`) is `freshness: 'request'`, `'live'` or `{ poll }` only (HZ049); `'live'` needs tags (HZ050).
+- **Changes on its own** (quotes, a feed): `freshness: { poll: 30 }` reads it again every 30 s (5 to 86400) while a page
+  shows it, also from the browser. `'live'` is for data your own mutations change. A refresh the visitor controls
+  (a button, Pause / Resume) is `refresh: () => [tag()]` on a machine transition (`hozu docs machine`).
+- Call a `fn` from views or machines: `ui.each(visible({ items, show: ctx.show }), 'id', …)`.
+- **A database** (pool, migrations, numeric ids): see --more.
+
+<!-- more -->
+
+## Details
+- A `fn` body may call functions and JSON constants declared in the same module; they are sent to the browser with
+  it. Imported names and `let` state are not (HZ047): pass them as input.
+- Rendering is derived: `scope` and `freshness` decide static, ISR, SWR, streamed or client rendering;
+  `scope: 'user'` data never reaches a cached page (HZ022). A mutation's tags can read only its input.
+- Freshness describes how the data changes, not where it is read; choose it per query. `'static'` (with tags) is
+  for data only your own declared writers change; `'request'` reads every time it is needed (on the server per
+  request, in the browser on mount and on tags; a public one makes its page uncacheable). `'live'` is only for push
+  updates.
+- `invalidates` drives the refresh: after a mutation or endpoint, cached pages and entries with those tags are
+  dropped and the page's queries with those tags are re-read. `endpoint({ …, invalidates: (input) => [tag()] })`
+  applies when it succeeds (use POST; a GET write is HZ062).
+- Writes from outside (a webhook, a job): `await server.revalidate([itemsTag()])` → `{ entries, pages }`.
+- **Why queries only read:** a query that creates a row on read runs again on every request, on prefetch and after a
+  delete (the account comes back). Keep two helpers: `listOf(user)` returns the stored list or `[]` for queries;
+  `ownListOf(user)` creates it, for mutations only.
+- Resolvers in `features/<name>/server.ts` (from the scaffold) are spread into `app.ts`; the input they get has
+  defaults and transforms applied.
+- Every mutation also has `Invalid` = `{ message, fields }` (input failing its schema, or
+  `fail('Invalid', { message, fields: { title: 'Taken' } })`); never declare `Invalid` or `Unexpected` yourself.
+
+## Resolvers in another language (Go)
+Only when the person asks for it or the service already exists in Go: TypeScript resolvers are the default and need
+no second process. `remote()` sends server effects to a service over HTTP; everything else (access, caching, tags,
+the output schema check) stays in the Hozu server, so a wrong answer is `Unexpected`, never a wrong page.
+```ts
+import { remote, resolvers } from '@hozu/data'
+export default app({
+  resolvers: resolvers(project, (implement) => [
+    implement(me, (_, { session }) => ({ name: session?.user ?? '' })),
+    ...remote(
+      {
+        url: { env: 'NOTES_SERVICE_URL' },
+        secret: { env: 'NOTES_SERVICE_SECRET' },
+        contract: new URL('./service/hozu/contract.go', import.meta.url),
+      },
+      [listNotes, addNote],
+    ),
+  ]),
+})
+```
+- The loop: change the declaration in TypeScript → `npx hozu gen` (writes the contract: types, the `Resolvers`
+  interface, `Handler`) → implement the interface until `go test ./...` passes → restart the service → `hozu check`.
+  A contract older than the declarations is HZ093 naming the changed effects; each effect has its own fingerprint, so
+  the service answers 409 only to calls of an effect that changed.
+- In Go: return a declared error as the error value (`hozu.NotesAddNoteDuplicate{Text: t}`), `hozu.Invalid{…}` for
+  input problems; `ctx.Session` is nil when signed out; `ctx.SetSession(…)` / `ctx.SignOut()` in mutations. Public
+  queries never receive the session. `ctx.File(token)` reads an upload, `ctx.Header` an endpoint's request headers
+  (no cookie), `ctx.Preview` preview mode. The secret is required (16+ characters, the same value on both sides,
+  HZ093): the service trusts the session it is sent, so serve `hozu.Handler(r, hozu.Options{Secret: …})` on a private
+  address (it refuses to start without one).
+- Any other Go error answers 500 with its first line, which reaches `onError` and `Unexpected` as a thrown TypeScript
+  error does, with the call's id (`x-hozu-call`) that the service's log line names
+  (`hozu: notes.listNotes (call 3fa2c1d0): …`). A service that is not running is `no service answers at <url>`.
+- `.meta({ title: 'Note' })` on a schema makes it one Go type wherever it appears; `z.int()` is `int64`, a plain
+  number `float64` (`hozu gen` notes number fields named like ids or counts); a string `z.enum` is a named type with
+  one constant per member (`hozu.OrderStatusPending`, named by its title or its field). Only `runs: 'server'` effects
+  and JSON endpoints can be remote (HZ093).
+- [`examples/notes-go`](https://github.com/olevatorr/Hozu/tree/main/examples/notes-go) is the reference: the notes
+  app with every resolver in Go. Its `service/main.go` is all a service needs besides the resolvers (`go.mod` is
+  yours; the contract's folder is the `hozu` package):
+```go
+func main() {
+	secret := os.Getenv("NOTES_SERVICE_SECRET") // the app's remote() secret, 16+ characters
+	addr := os.Getenv("NOTES_SERVICE_ADDR")     // the app's NOTES_SERVICE_URL is http://<addr>/effect
+	mux := http.NewServeMux()
+	mux.Handle("/effect", hozu.Handler(newResolvers(), hozu.Options{Secret: secret}))
+	server := &http.Server{Addr: addr, Handler: mux}
+	go func() {
+		if err := server.ListenAndServe(); !errors.Is(err, http.ErrServerClosed) {
+			log.Fatal(err)
+		}
+	}()
+	stop, cancel := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer cancel()
+	<-stop.Done() // finish the calls in flight, then exit
+	ctx, done := context.WithTimeout(context.Background(), 5*time.Second)
+	defer done()
+	server.Shutdown(ctx)
+}
+```
+
+## A database
+- One pool per process, made in `app.ts`; close it in `app({ dispose: () => pool.end() })` so `hozu get`, `call` and
+  `browse` exit and `hozu serve` stops cleanly. Transactions belong in one mutation resolver (`BEGIN` … `COMMIT`).
+- Migrations and seed data are scripts in `package.json` (`"db:migrate": "node db/migrate.ts"`), idempotent, run
+  before `npm start`; the URL and password are server env (`project({ env: { server } })`, `hozu docs env`).
+- Route params and form fields are strings: a numeric id is `z.coerce.number()` in the query or mutation input
+  (a query input that fails its schema is a program error, reported to `onError` with the field).
+- Data the whole staff shares but only staff may read is `scope: 'user'` with `access` (it is never cached across
+  requests). Share one rule: `const staffOnly = part(({ session }: { session: { role: string } }) => session.role === 'staff')`, then
+  `access: { allow: staffOnly }` on each effect.
+- A resolver may answer `fail('Forbidden', { message })` (a check `access` cannot make); with any access but
+  `'anyone'` its `session` is never null.
+- A failure you can expect (a row gone, a state that forbids the change) is a declared error of the effect
+  (`errors: { NotFound }`, `fail('NotFound', …)`), handled in `failed` with and without JavaScript. A thrown error is
+  `Unexpected`: a server fault (500 on a native post, `Internal error` in production).
+- Another app writing the same database: give the reading app a signed `endpoint` that `invalidates` the tags, and
+  call it after a write (`hozu docs endpoints`). Every query that app's writes change needs a tag, or only its
+  freshness time refreshes it.

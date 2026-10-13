@@ -1,0 +1,91 @@
+# Machine (one per feature)
+
+```ts
+export const m = machine({
+  context: z.object({ draft: z.string(), error: z.string().nullable() }),
+  initialContext: { draft: '', error: null },
+  initial: 'idle',
+  states: ({ ctx }) => ({
+    idle: { on: [on(Add, { target: 'adding', assign: (e) => { ctx.draft = e.title } })] },
+    adding: {
+      invoke: invoke(addItem, {
+        input: { title: ctx.draft },
+        done: { target: 'idle', assign: () => { ctx.draft = '' } },
+        failed: { Unexpected: { target: 'idle', assign: () => { ctx.error = 'Try again' } } },
+      }),
+    },
+  }),
+})
+```
+- Events: `export const Add = event({ payload: z.object({ title: z.string() }) })`.
+- **assign** writes context: `ctx.x = v`, `ctx.n += 1`, `ctx.list.push(item)`,
+  `ctx.list = ctx.list.filter((i) => i.id !== e.id)`.
+- **guard** returns a condition: `on(Add, { target: 'adding', guard: (e) => e.title.length >= 2 })`; the first
+  matching guard wins.
+- **invoke** runs a mutation (or reads a query) on entry; the state drops events it does not handle. `failed` lists every declared error
+  of the mutation plus `Unexpected` (`Invalid` optional, `hozu docs forms`).
+- An `on` without `target` stays: its timers keep running and an `invoke` keeps going. Naming the state enters it
+  again (timers restart, `invoke` re-runs): a debounce, or a timer that repeats.
+- `target: 'previous'` (or `done: 'previous'`) returns to the last state without `invoke`, so a busy state entered
+  from two modes (viewing, editing) needs no copy per mode.
+- **refresh** reads the page's queries with those tags again: `on(RefreshNow, { refresh: () => [quotesTag()] })`;
+  every 30 s unless paused: `after: [{ ms: 30_000, target: 'idle', guard: () => !ctx.paused, refresh: … }]`. A mode
+  the person sets (paused) is a context field: busy states keep it. **copy** writes text to the clipboard: `on(CopyLink, { copy: (e) => e.url })` (on an event: the
+  browser allows it only right after a click). **replace** writes the address without loading a page:
+  `replace: () => ui.link(home, null, { q: ctx.q })`, so a reload or a shared link keeps it (with `seed`). Effects
+  and `navigate` read the context after `assign`.
+
+<!-- more -->
+
+The full form: shared transitions, guards, `navigate`, errors, a timer.
+
+```ts
+export const m = machine({
+  context: z.object({ draft: z.string(), error: z.string().nullable(), target: z.string() }),
+  initialContext: { draft: '', error: null, target: '' },
+  initial: 'idle',
+  on: ({ ctx }) => [on(Draft, { assign: (e) => { ctx.draft = e.text; ctx.error = null } })],   // every state without invoke
+  states: ({ ctx }) => ({
+    idle: {
+      on: [
+        on(Add, { target: 'adding', guard: (e) => e.title.length >= 2 }),   // first matching guard wins
+        on(Add, { target: 'idle', assign: () => { ctx.error = 'Too short' } }),
+        on(Remove, { target: 'removing', assign: (e) => { ctx.target = e.id } }),
+      ],
+    },
+    adding: {                                   // runs addItem on entry; drops events it does not handle
+      invoke: invoke(addItem, {
+        input: { title: ctx.draft },
+        done: { target: 'idle', assign: () => { ctx.draft = '' }, navigate: (r) => ui.link(itemPage, { id: r.id }) },
+        failed: {                               // every declared error + Unexpected (+ optional Invalid)
+          Duplicate: { target: 'idle', assign: () => { ctx.error = 'Already exists' } },
+          Unexpected: { target: 'idle', assign: () => { ctx.error = 'unexpected' } },   // a code; the view words it
+        },
+      }),
+    },
+    removing: { invoke: invoke(removeItem, { input: { id: ctx.target }, done: 'idle', failed: { Unexpected: 'idle' } }) },
+    flash: { on: [on(Add, { target: 'adding' })], after: [{ ms: 3000, target: 'idle' }] },   // a toast; the page stays usable
+  }),
+})
+```
+- **Across pages:** the calm state (the last state without `invoke`, with its context) is kept in `sessionStorage`
+  and resumed on a page that shows the same machine view, or on the same address; a reload or a page without that
+  view starts from `initialContext` (or `seed`).
+- `Unexpected`'s `message` is `Internal error (call <id>)` in production (the real one reaches `onError`). A page
+  for customers stores a code or a fixed text; a staff tool may show `e.message`, whose call id matches the server
+  log line.
+- **assign** values are event (`e`), result (`r`) or error fields, context, literals, operators and `fn()` calls.
+- **guard** conditions: a field (`() => ctx.auto`), comparisons, `&&`, `||`, `!`, or a boolean `fn()`.
+- **navigate** sends the browser to `ui.link(route, params, search?)` after the transition. It returns one link: to
+  choose between links, write one guarded transition per link (`[{ guard: () => …, navigate: … }, { navigate: … }]`);
+  a `?:` inside `navigate` is HZ014.
+- `done` and each `failed` entry take a state name, one transition, or a list of guarded transitions.
+- **Shared transitions:** `machine({ on })` entries are copied into every state that has no `invoke`, is not final,
+  and neither handles nor ignores the event itself. Without `target` they stay in the state they fire in; one
+  contract covers every copy.
+- **Start from the URL or server data:** a view with a `route` may declare
+  `seed: ({ params, search, query }) => ({ q: search.q, email: query(me, {}).email })` (server render, hydration and
+  no-JS posts alike; a failed query leaves `initialContext`). One view per page may seed a machine (HZ048).
+- In an app with `site.locales`, machines never hold
+  translated text (HZ041): store a code (`ctx.error = 'duplicate'`) and choose the message in the view. The
+  scaffold does this in every app.

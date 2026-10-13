@@ -1,0 +1,188 @@
+{
+  "features": {
+    "site": {
+      "copied/after/0": {
+        "behavior": "36eee05d15550c45",
+        "contracts": {},
+        "decides": false,
+        "fields": {
+          "assign": [
+            {
+              "op": "set",
+              "path": [
+                "copied"
+              ],
+              "value": {
+                "literal": ""
+              }
+            }
+          ],
+          "enters": {
+            "effect": null,
+            "final": false,
+            "input": null,
+            "state": "idle",
+            "timers": []
+          },
+          "fns": {},
+          "guard": null,
+          "navigate": null
+        },
+        "summary": "copied --after 2000ms--> idle · copied := \"\""
+      },
+      "copied/on/site.Copy/0": {
+        "behavior": "89d7e27fdafe898c",
+        "contracts": {},
+        "decides": false,
+        "fields": {
+          "assign": [
+            {
+              "op": "set",
+              "path": [
+                "copied"
+              ],
+              "value": {
+                "path": [
+                  "text"
+                ],
+                "ref": "event"
+              }
+            }
+          ],
+          "copy": {
+            "path": [
+              "text"
+            ],
+            "ref": "event"
+          },
+          "enters": {
+            "effect": null,
+            "final": false,
+            "input": null,
+            "state": "copied",
+            "timers": [
+              2000
+            ]
+          },
+          "fns": {},
+          "guard": null,
+          "navigate": null
+        },
+        "summary": "copied --Copy--> copied · copied := event.text · copy event.text · after 2000ms"
+      },
+      "copied/on/site.Set_theme/0": {
+        "behavior": "ae5499745c366e6a",
+        "contracts": {},
+        "decides": false,
+        "fields": {
+          "assign": [
+            {
+              "op": "set",
+              "path": [
+                "theme"
+              ],
+              "value": {
+                "path": [
+                  "value"
+                ],
+                "ref": "event"
+              }
+            }
+          ],
+          "enters": {
+            "effect": null,
+            "final": false,
+            "input": null,
+            "state": "copied",
+            "timers": []
+          },
+          "fns": {},
+          "guard": null,
+          "navigate": null,
+          "stay": true
+        },
+        "summary": "copied --Set_theme--> stays · theme := event.value"
+      },
+      "idle/on/site.Copy/0": {
+        "behavior": "e559c8d4ea595e41",
+        "contracts": {},
+        "decides": false,
+        "fields": {
+          "assign": [
+            {
+              "op": "set",
+              "path": [
+                "copied"
+              ],
+              "value": {
+                "path": [
+                  "text"
+                ],
+                "ref": "event"
+              }
+            }
+          ],
+          "copy": {
+            "path": [
+              "text"
+            ],
+            "ref": "event"
+          },
+          "enters": {
+            "effect": null,
+            "final": false,
+            "input": null,
+            "state": "copied",
+            "timers": [
+              2000
+            ]
+          },
+          "fns": {},
+          "guard": null,
+          "navigate": null
+        },
+        "summary": "idle --Copy--> copied · copied := event.text · copy event.text · after 2000ms"
+      },
+      "idle/on/site.Set_theme/0": {
+        "behavior": "c72d6cadae9a801d",
+        "contracts": {},
+        "decides": false,
+        "fields": {
+          "assign": [
+            {
+              "op": "set",
+              "path": [
+                "theme"
+              ],
+              "value": {
+                "path": [
+                  "value"
+                ],
+                "ref": "event"
+              }
+            }
+          ],
+          "enters": {
+            "effect": null,
+            "final": false,
+            "input": null,
+            "state": "idle",
+            "timers": []
+          },
+          "fns": {},
+          "guard": null,
+          "navigate": null,
+          "stay": true
+        },
+        "summary": "idle --Set_theme--> stays · theme := event.value"
+      }
+    }
+  },
+  "pages": {
+    "access": {},
+    "endpoints": {},
+    "head": {},
+    "redirects": {}
+  },
+  "version": 2
+}

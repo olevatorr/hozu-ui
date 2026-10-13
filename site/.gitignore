@@ -1,0 +1,7 @@
+node_modules
+dist
+.hozu/
+.env
+.env.local
+.vercel
+ui/
