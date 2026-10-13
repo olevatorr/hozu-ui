@@ -268,7 +268,14 @@ export const Home = ui.view({
                 },
                 [
                   ui.p({ class: 'text-xl font-black uppercase' }, ['An app you already have']),
-                  ui.p({ class: 'text-coal/80' }, ['Add the package, then copy the kit into ui/.']),
+                  ui.p({ class: 'text-coal/80' }, [
+                    'The kit needs Hozu 1.0. Upgrade the app to the candidate first, then add the package and copy the kit into ui/.',
+                  ]),
+                  command(
+                    'npx -p @hozu/cli@next hozu migrate',
+                    ctx.copied === 'npx -p @hozu/cli@next hozu migrate',
+                    false,
+                  ),
                   command('npm install -D @hozu/ui-kit', ctx.copied === 'npm install -D @hozu/ui-kit', false),
                   command('npx hozu add kit ui --from official', ctx.copied === 'npx hozu add kit ui --from official', false),
                   ui.p({ class: 'text-sm text-coal/70' }, ['Or one at a time: npx hozu add component ui Button --from official']),
